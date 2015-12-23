@@ -41,7 +41,7 @@ namespace DownMailTest
         {
             int i = msgs.Count;
             DateTime msgDate;
-
+            SetDates();
             richTextBox2.AppendText("Начали смотреть че там да как...\n");
             Application.DoEvents();
             bool stop = false;
@@ -189,14 +189,14 @@ namespace DownMailTest
         private void MainLoadMail()
         {
             WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable table = workSqlite.GetTable("Select login, pass, port, hosts"
+            DataTable table = workSqlite.GetTable("Select login, pass, port, host"
                                                    + " From Hosts");
             for (int i = 0; i < table.Rows.Count; i++)
             {
                 string login = table.Rows[i][0].ToString();
                 string pass = table.Rows[i][1].ToString();
-                int port = Convert.ToInt32(table.Rows[i][0]);
-                string host = table.Rows[i][2].ToString();
+                int port = Convert.ToInt32(table.Rows[i][2].ToString());
+                string host = table.Rows[i][3].ToString();
                 connect(host, login, pass, port);
             }
         }
@@ -253,6 +253,13 @@ namespace DownMailTest
             }
 
         }
+
+        private void SetDates()
+        {
+            nowDate = monthCalendar1.SelectionStart;
+            endDate = monthCalendar1.SelectionEnd;
+        }
+
         public Form1()
         {
             InitializeComponent();
