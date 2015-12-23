@@ -126,13 +126,19 @@ namespace DownMailTest
 
         private void GetMessagersInTable()
         {
+            SetDates();
+            string startDate = nowDate.Date.ToString();
+            string endData = endDate.Date.ToString();
+            //startDate = startDate.Remove(10, 8);
+            endData = endData.Remove(10, 8);
+            endData = endData.Insert(10, " 23:00:00");
 
             WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable table = workSqlite.GetTable("Select Subject, From_, Data, idMessage"
                                                     + " From Messages"
                                                     +" Where Data between "
-                                                    + Func.AddQout(nowDate.Date.ToString())
-                                                    + " and " + Func.AddQout(endDate.Date.ToString()));
+                                                    + Func.AddQout(startDate)
+                                                    + " and " + Func.AddQout(endData));
             dataGridView1.DataSource = table;
             dataGridView1.Refresh();
         }
