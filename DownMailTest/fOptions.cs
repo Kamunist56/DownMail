@@ -17,6 +17,7 @@ namespace DownMailTest
         private void LoadData()
         {
             DataTable tb = workSQL.GetTable("SELECT login, pass, port, host FROM \"Hosts\"");
+            listBox1.Items.Clear();
             for (int i = 0; i < tb.Rows.Count; i++)
             {
 
@@ -214,6 +215,12 @@ namespace DownMailTest
                 textBox4.Text = table.Rows[0][2].ToString();
             }
             workSQL.CloseConnect();
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            workSQL.ExecuteQuery("Delete from Hosts where login=" + Func.AddQout(listBox1.SelectedItem.ToString()));
+            LoadData();
         }
     }
 }

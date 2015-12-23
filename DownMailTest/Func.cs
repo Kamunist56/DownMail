@@ -85,7 +85,6 @@ namespace DownMailTest
                 value = value.Insert(value.Length, "\"");
                 return value;
             }
-
             return "null";
         }
 
