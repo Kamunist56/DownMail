@@ -129,10 +129,10 @@ namespace DownMailTest
 
             WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable table = workSqlite.GetTable("Select Subject, From_, Data, idMessage"
-                                                   + " From Messages");
-            //+ " Where Data between " 
-            //+ Func.AddQout(nowDate.Date.ToString())
-            //+" and "+ Func.AddQout(endDate.Date.ToString()));
+                                                    + " From Messages"
+                                                    +" Where Data between "
+                                                    + Func.AddQout(nowDate.Date.ToString())
+                                                    + " and " + Func.AddQout(endDate.Date.ToString()));
             dataGridView1.DataSource = table;
             dataGridView1.Refresh();
         }
@@ -299,6 +299,11 @@ namespace DownMailTest
         {
             richTextBox1.SelectionStart = richTextBox1.Text.Length;
             richTextBox1.ScrollToCaret();
+        }
+
+        private void тестToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetMessagersInTable();
         }
     }
 }

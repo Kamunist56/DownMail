@@ -26,6 +26,10 @@ namespace DownMailTest
             tb = workSQL.GetTable("SELECT path, interval FROM \"Settings\"");
             if (tb.Rows.Count > 0)
             {
+                //for (int i = 0; tb.Rows.Count > i; i++)
+                //{
+                //    listBox1.Items.Add(tb.Rows[i][0].ToString());
+                //}
                 path = tb.Rows[0][0].ToString();
                 interval = tb.Rows[0][1].ToString();
                 textBox3.Text = path;
@@ -104,11 +108,6 @@ namespace DownMailTest
 
         }
 
-        private void GetParamInComponents()
-        {
-
-        }
-
 
         public fOptions()
         {
@@ -122,7 +121,11 @@ namespace DownMailTest
 
         private void button3_Click(object sender, EventArgs e)
         {
-            LoadData();
+            String newLogin;
+            if (InputBox.Input("Новый аккаунт", "Введите новый логин", out newLogin))
+            {
+                listBox1.Items.Add(newLogin);
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -192,6 +195,25 @@ namespace DownMailTest
                                                                               + "where id=" + Convert.ToInt64(idSet));
             }
 
+        }
+
+        private void fOptions_Load(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataTable table = workSQL.GetTable("SELECT pass, port, host" +
+                " FROM \"Hosts\" where login=\"" + listBox1.SelectedItem.ToString() + "\"");
+
+            if (table.Rows.Count > 0)
+            {
+                textBox1.Text = table.Rows[0][0].ToString();
+                textBox2.Text = table.Rows[0][1].ToString();
+                textBox4.Text = table.Rows[0][2].ToString();
+            }
+            workSQL.CloseConnect();
         }
     }
 }
