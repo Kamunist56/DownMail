@@ -45,85 +45,95 @@ namespace DownMailTest
             richTextBox2.AppendText("Начали смотреть че там да как...\n");
             Application.DoEvents();
             bool stop = false;
-
-
+            DateTime LoadDate = nowDate;
             do
             {
-                richTextBox1.Clear();
-                Application.DoEvents();
-                OpenPop.Mime.Message msg = client.GetMessage(i);
-                --i;
-                string date = msg.Headers.Date;
-                string subject = msg.Headers.Subject;
-                string adress = msg.Headers.From.Address;
-                string messId = msg.Headers.MessageId;
-                string dirArchive = "D:\\Temp\\" + Func.DirMonth() + "\\";
-
-
-                if ((subject == null))
-                    subject = "БезТемы";
-
-                subject = Func.DelBadChars(subject);
-                richTextBox1.AppendText("Получили инфу по письму\n");
-                Application.DoEvents();
-
-                date = date.Remove(25, date.Length - 25);
-                DateTime.TryParse(date, out msgDate);
-                GetMessagersInTable();
-                if ((msgDate.Date.CompareTo(nowDate.Date) == 0))
+                do
                 {
-                    // если пиьмо есть в таблице то не будем его грузить
-                    if (FindMessInTable(messId))
+                    richTextBox1.Clear();
+                    Application.DoEvents();
+                    OpenPop.Mime.Message msg = client.GetMessage(i);
+                    --i;
+                    string date = msg.Headers.Date;
+                    string subject = msg.Headers.Subject;
+                    string adress = msg.Headers.From.Address;
+                    string messId = msg.Headers.MessageId;
+                    string dirArchive = "D:\\Temp\\" + Func.DirMonth() + "\\"+"\\";
+
+
+                    if ((subject == null))
+                        subject = "БезТемы";
+
+                    subject = Func.DelBadChars(subject);
+                    richTextBox1.AppendText("Получили инфу по письму\n");
+                    Application.DoEvents();
+
+                    date = date.Remove(25, date.Length - 25);
+                    DateTime.TryParse(date, out msgDate);
+                    GetMessagersInTable();
+
+                    if ((msgDate.Date.CompareTo(LoadDate.Date) == 0))
                     {
-                        continue;
+                        string d = msgDate.Date.ToString();
+                        d = d.Remove(10, 8);
+                        dirArchive = dirArchive + d + "\\";
+                        // если пиьмо есть в таблице то не будем его грузить
+                        if (FindMessInTable(messId))
+                        {
+                            continue;
+                        }
+
+                        //если нашли в таблице письмо с такой же темой, 
+                        //то прибавим к теме нового письма адрес автора
+                        if (FindSubjectInTable(subject))
+                        {
+                            dirArchive = dirArchive + " (" + adress + ")";
+                        }
+
+                        // проверяем длинну и создаем дирректорию
+                        subject = Func.TrimSubject(dirArchive, subject); //делаем путьдо 250
+                        
+                        DirectoryInfo di = new DirectoryInfo(dirArchive + subject);
+                        di.Create();
+
+                        // пишем в таблицу
+                        //dataGridView1.Rows.Add(subject, adress, msgDate, messId);
+
+                        WorkSQLite workSQL = new WorkSQLite(@"BoxLetters.sqlite");
+                        workSQL.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
+                                                + Func.AddQout(subject) + "," + Func.AddQout(adress) + ","
+                                                + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + ")");
+                        dataGridView1.Refresh();
+                        //загрузка тела письма
+                        richTextBox2.AppendText("Загрузка письма: " + subject + "\n");
+                        Application.DoEvents();
+                        LoadMess(msg, subject, dirArchive);
+
+                        //Загрузка атачмансов
+                        richTextBox1.AppendText("Проверка вложений\n");
+                        Application.DoEvents();
+                        DownLoadAttach(msg, subject, dirArchive);
+
+                        stop = false;
                     }
 
-                    //если нашли в таблице письмо с такой же темой, 
-                    //то прибавим к теме нового письма адрес автора
-                    if (FindSubjectInTable(subject))
+                    if (msgDate.Date.CompareTo(LoadDate.Date) == -1)
                     {
-                        dirArchive = dirArchive + " (" + adress + ")";
+                        stop = true;
+
                     }
 
-                    // проверяем длинну и создаем дирректорию
-                    subject = Func.TrimSubject(dirArchive, subject); //делаем путьдо 250
-                    DirectoryInfo di = new DirectoryInfo(dirArchive + subject);
-                    di.Create();
-
-                    // пишем в таблицу
-                    //dataGridView1.Rows.Add(subject, adress, msgDate, messId);
-
-                    WorkSQLite workSQL = new WorkSQLite(@"BoxLetters.sqlite");
-                    workSQL.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
-                                          + Func.AddQout(subject) + "," + Func.AddQout(adress) + ","
-                                          + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + ")");
-                    dataGridView1.Refresh();
-                    //загрузка тела письма
-                    richTextBox2.AppendText("Загрузка письма: " + subject + "\n");
-                    Application.DoEvents();
-                    LoadMess(msg, subject, dirArchive);
-
-                    //Загрузка атачмансов
-                    richTextBox1.AppendText("Проверка вложений\n");
-                    Application.DoEvents();
-                    DownLoadAttach(msg, subject, dirArchive);
-
-                    stop = false;
                 }
 
-                if (msgDate.Date.CompareTo(nowDate.Date) == -1)
-                {
-                    stop = true;
-
-                }
-
+                while ((i <= msgs.Count) && (stop == false));
+                LoadDate = LoadDate.AddDays(1);
+                i = msgs.Count;
+                stop = false;
             }
-
-            while ((i <= msgs.Count) && (stop == false));
+            while (LoadDate.Date.CompareTo(endDate) < 0);
             client.Disconnect();
 
         }
-
         private void GetMessagersInTable()
         {
             SetDates();

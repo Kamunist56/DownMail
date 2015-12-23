@@ -139,8 +139,8 @@
             // тестToolStripMenuItem
             // 
             this.тестToolStripMenuItem.Name = "тестToolStripMenuItem";
-            this.тестToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.тестToolStripMenuItem.Text = "Тест";
+            this.тестToolStripMenuItem.Size = new System.Drawing.Size(238, 20);
+            this.тестToolStripMenuItem.Text = "Показать письма за выбранный период";
             this.тестToolStripMenuItem.Click += new System.EventHandler(this.тестToolStripMenuItem_Click);
             // 
             // Form1
