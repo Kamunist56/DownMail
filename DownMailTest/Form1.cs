@@ -14,11 +14,11 @@ namespace DownMailTest
         private DateTime nowDate = DateTime.Today.AddDays(-3);
         private DateTime endDate = DateTime.Today.AddDays(-3);
 
-        private void connect()
+        private void connect(string host, string login, string pass, int port)
         {
             try
             {
-                client.Connect("pop.mail.ru", 995, true);
+                client.Connect(host, port, true);
             }
             catch
             {
@@ -26,7 +26,7 @@ namespace DownMailTest
                 richTextBox2.AppendText(ex.Message);
 
             }
-            client.Authenticate("mgkb_pirogova", "ktnj2015");
+            client.Authenticate(login, pass);
             richTextBox2.AppendText("Вошел в почту\n");
             Application.DoEvents();
             List<string> msgs = client.GetMessageUids();
@@ -186,6 +186,21 @@ namespace DownMailTest
             }
         }
 
+        private void MainLoadMail()
+        {
+            WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
+            DataTable table = workSqlite.GetTable("Select login, pass, port, hosts"
+                                                   + " From Hosts");
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                string login = table.Rows[i][0].ToString();
+                string pass = table.Rows[i][1].ToString();
+                int port = Convert.ToInt32(table.Rows[i][0]);
+                string host = table.Rows[i][2].ToString();
+                connect(host, login, pass, port);
+            }
+        }
+
         private bool FindMessInTable(string idMessage)
         {
             bool est = false;
@@ -248,10 +263,6 @@ namespace DownMailTest
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            connect();
-        }
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -269,12 +280,18 @@ namespace DownMailTest
 
         private void загрузкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            connect();
+            MainLoadMail();
         }
 
         private void загрузкаToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
+            MainLoadMail();
+        }
 
+        private void richTextBox2_TextChanged(object sender, EventArgs e)
+        {
+            richTextBox1.SelectionStart = richTextBox1.Text.Length;
+            richTextBox1.ScrollToCaret();
         }
     }
 }
