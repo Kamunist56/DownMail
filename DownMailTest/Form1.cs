@@ -46,8 +46,7 @@ namespace DownMailTest
             Application.DoEvents();
             bool stop = false;
             DateTime LoadDate = nowDate;
-            do
-            {
+
                 do
                 {
                     richTextBox1.Clear();
@@ -60,7 +59,6 @@ namespace DownMailTest
                     string messId = msg.Headers.MessageId;
                     string dirArchive = "D:\\Temp\\" + Func.DirMonth() + "\\"+"\\";
 
-
                     if ((subject == null))
                         subject = "БезТемы";
 
@@ -72,16 +70,13 @@ namespace DownMailTest
                     DateTime.TryParse(date, out msgDate);
                     GetMessagersInTable();
 
-                    if ((msgDate.Date.CompareTo(LoadDate.Date) == 0))
+                    if (((msgDate.Date.CompareTo(nowDate.Date) >= 0) 
+                        && (msgDate.Date.CompareTo(endDate.Date)<=0)) 
+                        && (FindMessInTable(messId)==false))
                     {
                         string d = msgDate.Date.ToString();
-                        d = d.Remove(10, 8);
-                        dirArchive = dirArchive + d + "\\";
-                        // если пиьмо есть в таблице то не будем его грузить
-                        if (FindMessInTable(messId))
-                        {
-                            continue;
-                        }
+                       d = d.Remove(10, 8);
+                        dirArchive = dirArchive + d + "\\";                 
 
                         //если нашли в таблице письмо с такой же темой, 
                         //то прибавим к теме нового письма адрес автора
@@ -103,7 +98,8 @@ namespace DownMailTest
                         workSQL.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
                                                 + Func.AddQout(subject) + "," + Func.AddQout(adress) + ","
                                                 + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + ")");
-                        dataGridView1.Refresh();
+                    GetMessagersInTable();
+                    dataGridView1.Refresh();
                         //загрузка тела письма
                         richTextBox2.AppendText("Загрузка письма: " + subject + "\n");
                         Application.DoEvents();
@@ -123,14 +119,14 @@ namespace DownMailTest
 
                     }
 
-                }
+                //}
 
-                while ((i <= msgs.Count) && (stop == false));
-                LoadDate = LoadDate.AddDays(1);
-                i = msgs.Count;
-                stop = false;
+                //while ((i <= msgs.Count) && (stop == false));
+                //LoadDate = LoadDate.AddDays(1);
+                //i = msgs.Count;
+                //stop = false;
             }
-            while (LoadDate.Date.CompareTo(endDate) < 0);
+            while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) && (msgDate.Date.CompareTo(endDate.Date) < 0));
             client.Disconnect();
 
         }
