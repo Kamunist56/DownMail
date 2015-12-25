@@ -134,13 +134,14 @@ namespace DownMailTest
         {
             SetDates();
             string startDate = nowDate.Date.ToString();
-            string endData = endDate.Date.ToString();
+            string endData = endDate.Date.AddDays(1).ToString();
             //startDate = startDate.Remove(10, 8);
-            endData = endData.Remove(10, 8);
-            endData = endData.Insert(10, " 23:00:00");
+            //endData = endDate.Date.AddDays(1);
+            //    endData.Remove(10, 8);
+            //endData = endData.Insert(10, " 23:59:59");
 
             WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable table = workSqlite.GetTable("Select Subject, From_, Data, idMessage"
+            DataTable table = workSqlite.GetTable("Select Subject, From_, cast(Data as varchar) Data, idMessage"
                                                     + " From Messages"
                                                     +" Where Data between "
                                                     + Func.AddQout(startDate)
