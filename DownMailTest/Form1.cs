@@ -59,10 +59,10 @@ namespace DownMailTest
                 string messId = msg.Headers.MessageId;
                 string dirArchive = dir + Func.DirMonth() + "\\" + "\\";
 
-                if ((subject == null) & (subject == ""))
+                if ((String.IsNullOrEmpty(subject)) & (subject == ""))
                     subject = "БезТемы";
-
-                subject = Func.DelBadChars(subject);
+                else { subject = Func.DelBadChars(subject); }
+                
                 richTextBox1.AppendText("Получили инфу по письму\n");
                 Application.DoEvents();
 
@@ -126,7 +126,7 @@ namespace DownMailTest
                 //i = msgs.Count;
                 //stop = false;
             }
-            while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) && (msgDate.Date.CompareTo(endDate.Date) < 0));
+            while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) && (msgDate.Date.CompareTo(endDate.Date) <= 0));
             client.Disconnect();
 
         }
@@ -145,7 +145,8 @@ namespace DownMailTest
                                                     + " From Messages"
                                                     + " Where Data between "
                                                     + Func.AddQout(startDate)
-                                                    + " and " + Func.AddQout(endData));
+                                                    + " and " + Func.AddQout(endData)
+                                                    + " Order by Data asc");
             dataGridView1.DataSource = table;
             dataGridView1.Refresh();
         }
@@ -312,6 +313,13 @@ namespace DownMailTest
         private void тестToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GetMessagersInTable();
+        }
+
+        private void удалитьПисьмоToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
+            work.ExecuteQuery("delete from Messages where idMessage=" + Func.AddQout(dataGridView1.CurrentCell.Value.ToString()));
+            dataGridView1.Refresh();
         }
     }
 }

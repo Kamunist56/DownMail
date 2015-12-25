@@ -33,12 +33,13 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.загрузкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.тестToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
-            this.тестToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.удалитьПисьмоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -70,7 +71,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.загрузкаToolStripMenuItem,
             this.настройкиToolStripMenuItem,
-            this.тестToolStripMenuItem});
+            this.тестToolStripMenuItem,
+            this.удалитьПисьмоToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1034, 24);
@@ -90,6 +92,13 @@
             this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
             this.настройкиToolStripMenuItem.Text = "Настройки";
             this.настройкиToolStripMenuItem.Click += new System.EventHandler(this.настройкиToolStripMenuItem_Click);
+            // 
+            // тестToolStripMenuItem
+            // 
+            this.тестToolStripMenuItem.Name = "тестToolStripMenuItem";
+            this.тестToolStripMenuItem.Size = new System.Drawing.Size(238, 20);
+            this.тестToolStripMenuItem.Text = "Показать письма за выбранный период";
+            this.тестToolStripMenuItem.Click += new System.EventHandler(this.тестToolStripMenuItem_Click);
             // 
             // splitter1
             // 
@@ -111,6 +120,13 @@
             this.panel2.Size = new System.Drawing.Size(1034, 319);
             this.panel2.TabIndex = 7;
             // 
+            // monthCalendar1
+            // 
+            this.monthCalendar1.Location = new System.Drawing.Point(444, 6);
+            this.monthCalendar1.MaxSelectionCount = 31;
+            this.monthCalendar1.Name = "monthCalendar1";
+            this.monthCalendar1.TabIndex = 8;
+            // 
             // richTextBox1
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -130,19 +146,12 @@
             this.richTextBox2.Text = "";
             this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
             // 
-            // monthCalendar1
+            // удалитьПисьмоToolStripMenuItem
             // 
-            this.monthCalendar1.Location = new System.Drawing.Point(444, 6);
-            this.monthCalendar1.MaxSelectionCount = 31;
-            this.monthCalendar1.Name = "monthCalendar1";
-            this.monthCalendar1.TabIndex = 8;
-            // 
-            // тестToolStripMenuItem
-            // 
-            this.тестToolStripMenuItem.Name = "тестToolStripMenuItem";
-            this.тестToolStripMenuItem.Size = new System.Drawing.Size(238, 20);
-            this.тестToolStripMenuItem.Text = "Показать письма за выбранный период";
-            this.тестToolStripMenuItem.Click += new System.EventHandler(this.тестToolStripMenuItem_Click);
+            this.удалитьПисьмоToolStripMenuItem.Name = "удалитьПисьмоToolStripMenuItem";
+            this.удалитьПисьмоToolStripMenuItem.Size = new System.Drawing.Size(108, 20);
+            this.удалитьПисьмоToolStripMenuItem.Text = "Удалить письмо";
+            this.удалитьПисьмоToolStripMenuItem.Click += new System.EventHandler(this.удалитьПисьмоToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -179,6 +188,7 @@
         private System.Windows.Forms.ToolStripMenuItem загрузкаToolStripMenuItem;
         private System.Windows.Forms.MonthCalendar monthCalendar1;
         private System.Windows.Forms.ToolStripMenuItem тестToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem удалитьПисьмоToolStripMenuItem;
     }
 }
 
