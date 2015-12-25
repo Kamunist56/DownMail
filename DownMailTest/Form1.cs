@@ -14,7 +14,7 @@ namespace DownMailTest
         private DateTime nowDate = DateTime.Today.AddDays(-3);
         private DateTime endDate = DateTime.Today.AddDays(-3);
 
-        private void connect(string host, string login, string pass, int port)
+        private void connect(string host, string login, string pass, int port, string dir)
         {
             try
             {
@@ -32,12 +32,12 @@ namespace DownMailTest
             List<string> msgs = client.GetMessageUids();
             richTextBox2.AppendText("Получил список id писем\n");
             Application.DoEvents();
-            GetHeadMess(msgs);
+            GetHeadMess(msgs, dir);
             richTextBox2.AppendText("Закончил\n");
         }
 
 
-        private void GetHeadMess(List<string> msgs)
+        private void GetHeadMess(List<string> msgs, string dir)
         {
             int i = msgs.Count;
             DateTime msgDate;
@@ -57,9 +57,9 @@ namespace DownMailTest
                 string subject = msg.Headers.Subject;
                 string adress = msg.Headers.From.Address;
                 string messId = msg.Headers.MessageId;
-                string dirArchive = "D:\\Temp\\" + Func.DirMonth() + "\\" + "\\";
+                string dirArchive = dir + Func.DirMonth() + "\\" + "\\";
 
-                if ((subject == null))
+                if ((subject == null) & (subject == ""))
                     subject = "БезТемы";
 
                 subject = Func.DelBadChars(subject);
@@ -202,7 +202,11 @@ namespace DownMailTest
         private void MainLoadMail()
         {
             WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable table = workSqlite.GetTable("Select login, pass, port, host"
+            DataTable table = workSqlite.GetTable("Select path, interval from Settings");
+            string path = table.Rows[0][0].ToString();
+            string interval = table.Rows[0][1].ToString();
+
+            table = workSqlite.GetTable("Select login, pass, port, host"
                                                    + " From Hosts");
             for (int i = 0; i < table.Rows.Count; i++)
             {
@@ -210,32 +214,28 @@ namespace DownMailTest
                 string pass = table.Rows[i][1].ToString();
                 int port = Convert.ToInt32(table.Rows[i][2].ToString());
                 string host = table.Rows[i][3].ToString();
-                connect(host, login, pass, port);
+                connect(host, login, pass, port, path);
             }
+            
+
         }
 
-        private bool FindMessInTable(string idMessage)
+        private bool FindMessInTable(string subject)
         {
-            bool est = false;
-            int i = 0;
-
-            while ((est == false) && (i < dataGridView1.RowCount - 1))
+            WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
+            DataTable tb = work.GetTable("select id from Messages where Subject=" + Func.AddQout(subject));
+            if (tb.Rows.Count > 0)
             {
-                string dataIdMessage = dataGridView1.Rows[i].Cells[3].Value.ToString();
-                if (dataIdMessage == idMessage)
-                {
-                    est = true;
-                }
-                i++;
+                return true;
             }
-            return est;
+            return false;
         }
 
-        private bool FindSubjectInTable(string idMesage)
+        private bool FindSubjectInTable(string idMessage)
         {
 
             WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable tb = work.GetTable("select id from Messages where IdMessage=" + idMesage);
+            DataTable tb = work.GetTable("select id from Messages where IdMessage=" + Func.AddQout(idMessage));
             if (tb.Rows.Count > 0)
             {
                 return true;
