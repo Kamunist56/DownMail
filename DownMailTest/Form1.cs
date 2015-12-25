@@ -47,77 +47,77 @@ namespace DownMailTest
             bool stop = false;
             DateTime LoadDate = nowDate;
 
-                do
+            do
+            {
+                richTextBox1.Clear();
+                Application.DoEvents();
+                OpenPop.Mime.Message msg = client.GetMessage(i);
+                --i;
+                string date = msg.Headers.Date;
+                string subject = msg.Headers.Subject;
+                string adress = msg.Headers.From.Address;
+                string messId = msg.Headers.MessageId;
+                string dirArchive = "D:\\Temp\\" + Func.DirMonth() + "\\" + "\\";
+
+                if ((subject == null))
+                    subject = "БезТемы";
+
+                subject = Func.DelBadChars(subject);
+                richTextBox1.AppendText("Получили инфу по письму\n");
+                Application.DoEvents();
+
+                date = date.Remove(25, date.Length - 25);
+                DateTime.TryParse(date, out msgDate);
+                GetMessagersInTable();
+
+                if (((msgDate.Date.CompareTo(nowDate.Date) >= 0)
+                    && (msgDate.Date.CompareTo(endDate.Date) <= 0))
+                    && (FindMessInTable(messId) == false))
                 {
-                    richTextBox1.Clear();
-                    Application.DoEvents();
-                    OpenPop.Mime.Message msg = client.GetMessage(i);
-                    --i;
-                    string date = msg.Headers.Date;
-                    string subject = msg.Headers.Subject;
-                    string adress = msg.Headers.From.Address;
-                    string messId = msg.Headers.MessageId;
-                    string dirArchive = "D:\\Temp\\" + Func.DirMonth() + "\\"+"\\";
+                    string d = msgDate.Date.ToString();
+                    d = d.Remove(10, 8);
+                    dirArchive = dirArchive + d + "\\";
 
-                    if ((subject == null))
-                        subject = "БезТемы";
-
-                    subject = Func.DelBadChars(subject);
-                    richTextBox1.AppendText("Получили инфу по письму\n");
-                    Application.DoEvents();
-
-                    date = date.Remove(25, date.Length - 25);
-                    DateTime.TryParse(date, out msgDate);
-                    GetMessagersInTable();
-
-                    if (((msgDate.Date.CompareTo(nowDate.Date) >= 0) 
-                        && (msgDate.Date.CompareTo(endDate.Date)<=0)) 
-                        && (FindMessInTable(messId)==false))
+                    //если нашли в таблице письмо с такой же темой, 
+                    //то прибавим к теме нового письма адрес автора
+                    if (FindSubjectInTable(subject))
                     {
-                        string d = msgDate.Date.ToString();
-                       d = d.Remove(10, 8);
-                        dirArchive = dirArchive + d + "\\";                 
+                        dirArchive = dirArchive + " (" + adress + ")";
+                    }
 
-                        //если нашли в таблице письмо с такой же темой, 
-                        //то прибавим к теме нового письма адрес автора
-                        if (FindSubjectInTable(subject))
-                        {
-                            dirArchive = dirArchive + " (" + adress + ")";
-                        }
+                    // проверяем длинну и создаем дирректорию
+                    subject = Func.TrimSubject(dirArchive, subject); //делаем путьдо 250
 
-                        // проверяем длинну и создаем дирректорию
-                        subject = Func.TrimSubject(dirArchive, subject); //делаем путьдо 250
-                        
-                        DirectoryInfo di = new DirectoryInfo(dirArchive + subject);
-                        di.Create();
+                    DirectoryInfo di = new DirectoryInfo(dirArchive + subject);
+                    di.Create();
 
-                        // пишем в таблицу
-                        //dataGridView1.Rows.Add(subject, adress, msgDate, messId);
+                    // пишем в таблицу
+                    //dataGridView1.Rows.Add(subject, adress, msgDate, messId);
 
-                        WorkSQLite workSQL = new WorkSQLite(@"BoxLetters.sqlite");
-                        workSQL.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
-                                                + Func.AddQout(subject) + "," + Func.AddQout(adress) + ","
-                                                + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + ")");
+                    WorkSQLite workSQL = new WorkSQLite(@"BoxLetters.sqlite");
+                    workSQL.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
+                                            + Func.AddQout(subject) + "," + Func.AddQout(adress) + ","
+                                            + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + ")");
                     GetMessagersInTable();
                     dataGridView1.Refresh();
-                        //загрузка тела письма
-                        richTextBox2.AppendText("Загрузка письма: " + subject + "\n");
-                        Application.DoEvents();
-                        LoadMess(msg, subject, dirArchive);
+                    //загрузка тела письма
+                    richTextBox2.AppendText("Загрузка письма: " + subject + "\n");
+                    Application.DoEvents();
+                    LoadMess(msg, subject, dirArchive);
 
-                        //Загрузка атачмансов
-                        richTextBox1.AppendText("Проверка вложений\n");
-                        Application.DoEvents();
-                        DownLoadAttach(msg, subject, dirArchive);
+                    //Загрузка атачмансов
+                    richTextBox1.AppendText("Проверка вложений\n");
+                    Application.DoEvents();
+                    DownLoadAttach(msg, subject, dirArchive);
 
-                        stop = false;
-                    }
+                    stop = false;
+                }
 
-                    if (msgDate.Date.CompareTo(LoadDate.Date) == -1)
-                    {
-                        stop = true;
+                if (msgDate.Date.CompareTo(LoadDate.Date) == -1)
+                {
+                    stop = true;
 
-                    }
+                }
 
                 //}
 
@@ -143,7 +143,7 @@ namespace DownMailTest
             WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable table = workSqlite.GetTable("Select Subject, From_, cast(Data as varchar) Data, idMessage"
                                                     + " From Messages"
-                                                    +" Where Data between "
+                                                    + " Where Data between "
                                                     + Func.AddQout(startDate)
                                                     + " and " + Func.AddQout(endData));
             dataGridView1.DataSource = table;
@@ -231,21 +231,16 @@ namespace DownMailTest
             return est;
         }
 
-        private bool FindSubjectInTable(string subject)
+        private bool FindSubjectInTable(string idMesage)
         {
-            bool est = false;
-            int i = 0;
 
-            while ((est == false) && (i < dataGridView1.RowCount - 1))
+            WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
+            DataTable tb = work.GetTable("select id from Messages where IdMessage=" + idMesage);
+            if (tb.Rows.Count > 0)
             {
-                string dataSubject = dataGridView1.Rows[i].Cells[0].Value.ToString();
-                if (dataSubject == subject)
-                {
-                    est = true;
-                }
-                i++;
+                return true;
             }
-            return est;
+            return false;
         }
 
         private void SetFileCharset(string fileName)
@@ -286,7 +281,7 @@ namespace DownMailTest
 
         private void button2_Click(object sender, EventArgs e)
         {
-            GetMessagersInTable();    
+            GetMessagersInTable();
 
 
         }
