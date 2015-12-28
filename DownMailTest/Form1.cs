@@ -44,7 +44,6 @@ namespace DownMailTest
             SetDates();
             richTextBox2.AppendText("Начали смотреть че там да как...\n");
             Application.DoEvents();
-            //bool stop = false;
             DateTime LoadDate = nowDate;
 
             do
@@ -108,21 +107,9 @@ namespace DownMailTest
                     Application.DoEvents();
                     DownLoadAttach(msg, subject, dirArchive);
 
-                    //stop = false;
                 }
 
-                //if (msgDate.Date.CompareTo(LoadDate.Date) == -1)
-                //{
-                //    stop = true;
-
-                //}
-
-                //}
-
-                //while ((i <= msgs.Count) && (stop == false));
-                //LoadDate = LoadDate.AddDays(1);
-                //i = msgs.Count;
-                //stop = false;
+ 
             }
             while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) & (msgDate.Date.CompareTo(endDate.Date) <= 0));
             client.Disconnect();
