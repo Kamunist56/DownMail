@@ -1,13 +1,12 @@
 ﻿using System.Data.SQLite;
-using System.Data;
 
 namespace DownMailTest
 {
-    class BaseCreater
+    class BaseCreator
     {
        public string pathBase;
 
-        public BaseCreater(string pathToBase)
+        public BaseCreator(string pathToBase)
         {
             SetPathBase(pathToBase);            
         }

@@ -17,7 +17,9 @@ namespace DownMailTest
 
         public void SetConnect()
         {
+            
             sql_con = new SQLiteConnection("Data Source=" + pathToBase + ";Version=3;Timeout=10;", true);
+            
 
         }
 

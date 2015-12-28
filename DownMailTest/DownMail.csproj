@@ -90,7 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseCreater.cs" />
+    <Compile Include="BaseCreator.cs" />
     <Compile Include="fOptions.cs">
       <SubType>Form</SubType>
     </Compile>

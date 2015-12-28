@@ -13,6 +13,7 @@ namespace DownMailTest
         Pop3Client client = new Pop3Client();
         private DateTime nowDate = DateTime.Today.AddDays(-3);
         private DateTime endDate = DateTime.Today.AddDays(-3);
+        private WorkSQLite workSqlite;//= new WorkSQLite(@"BoxLetters.sqlite");
 
         private void connect(string host, string login, string pass, int port, string dir)
         {
@@ -91,8 +92,8 @@ namespace DownMailTest
                     // пишем в таблицу
                     //dataGridView1.Rows.Add(subject, adress, msgDate, messId);
 
-                    WorkSQLite workSQL = new WorkSQLite(@"BoxLetters.sqlite");
-                    workSQL.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
+                    // WorkSQLite workSQL = new WorkSQLite(@"BoxLetters.sqlite");
+                    workSqlite.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
                                             + Func.AddQout(subject) + "," + Func.AddQout(adress) + ","
                                             + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + ")");
                     GetMessagersInTable();
@@ -125,7 +126,7 @@ namespace DownMailTest
             //    endData.Remove(10, 8);
             //endData = endData.Insert(10, " 23:59:59");
 
-            WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
+            //WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable table = workSqlite.GetTable("Select Subject, From_, cast(Data as varchar) Data, idMessage"
                                                     + " From Messages"
                                                     + " Where Data between "
@@ -187,7 +188,7 @@ namespace DownMailTest
 
         private void MainLoadMail()
         {
-            WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
+            //WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable table = workSqlite.GetTable("Select path, interval from Settings");
             string path = table.Rows[0][0].ToString();
             string interval = table.Rows[0][1].ToString();
@@ -208,8 +209,8 @@ namespace DownMailTest
 
         private bool FindMessInTable(string idMessage)
         {
-            WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable tb = work.GetTable("select id from Messages where IdMessage=" + Func.AddQout(idMessage));
+            //WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
+            DataTable tb = workSqlite.GetTable("select id from Messages where IdMessage=" + Func.AddQout(idMessage));
             if (tb.Rows.Count > 0)
             {
                 return true;
@@ -224,8 +225,8 @@ namespace DownMailTest
         private bool FindSubjectInTable(string subject)
         {
 
-            WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable tb = work.GetTable("select id from Messages where Subject=" + Func.AddQout(subject));
+            //WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
+            DataTable tb = workSqlite.GetTable("select id from Messages where Subject=" + Func.AddQout(subject));
             if (tb.Rows.Count > 0)
             {
                 return true;
@@ -263,8 +264,19 @@ namespace DownMailTest
             InitializeComponent();
         }
 
+        private void CreateBase()
+        {
+            string base_ = @"BoxLetters.sqlite";
+            if (File.Exists(base_)!=true)
+            {
+                BaseCreator baseCreator = new BaseCreator(base_);
+            }
+            workSqlite = new WorkSQLite(base_);
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            CreateBase();
             GetMessagersInTable();
         }
 
@@ -306,8 +318,8 @@ namespace DownMailTest
 
         private void удалитьПисьмоToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
-            work.ExecuteQuery("delete from Messages where idMessage=" + 
+            // WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
+            workSqlite.ExecuteQuery("delete from Messages where idMessage=" + 
                 Func.AddQout(dataGridView1[ 3,dataGridView1.CurrentRow.Index].Value.ToString()));
             GetMessagersInTable();
             dataGridView1.Refresh();
