@@ -34,12 +34,12 @@
             this.загрузкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.тестToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.удалитьПисьмоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel2 = new System.Windows.Forms.Panel();
             this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.удалитьПисьмоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -63,6 +63,7 @@
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 24);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(1034, 157);
             this.dataGridView1.TabIndex = 4;
             // 
@@ -99,6 +100,13 @@
             this.тестToolStripMenuItem.Size = new System.Drawing.Size(238, 20);
             this.тестToolStripMenuItem.Text = "Показать письма за выбранный период";
             this.тестToolStripMenuItem.Click += new System.EventHandler(this.тестToolStripMenuItem_Click);
+            // 
+            // удалитьПисьмоToolStripMenuItem
+            // 
+            this.удалитьПисьмоToolStripMenuItem.Name = "удалитьПисьмоToolStripMenuItem";
+            this.удалитьПисьмоToolStripMenuItem.Size = new System.Drawing.Size(108, 20);
+            this.удалитьПисьмоToolStripMenuItem.Text = "Удалить письмо";
+            this.удалитьПисьмоToolStripMenuItem.Click += new System.EventHandler(this.удалитьПисьмоToolStripMenuItem_Click);
             // 
             // splitter1
             // 
@@ -145,13 +153,6 @@
             this.richTextBox2.TabIndex = 4;
             this.richTextBox2.Text = "";
             this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
-            // 
-            // удалитьПисьмоToolStripMenuItem
-            // 
-            this.удалитьПисьмоToolStripMenuItem.Name = "удалитьПисьмоToolStripMenuItem";
-            this.удалитьПисьмоToolStripMenuItem.Size = new System.Drawing.Size(108, 20);
-            this.удалитьПисьмоToolStripMenuItem.Text = "Удалить письмо";
-            this.удалитьПисьмоToolStripMenuItem.Click += new System.EventHandler(this.удалитьПисьмоToolStripMenuItem_Click);
             // 
             // Form1
             // 

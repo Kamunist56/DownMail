@@ -44,7 +44,7 @@ namespace DownMailTest
             SetDates();
             richTextBox2.AppendText("Начали смотреть че там да как...\n");
             Application.DoEvents();
-            bool stop = false;
+            //bool stop = false;
             DateTime LoadDate = nowDate;
 
             do
@@ -57,7 +57,7 @@ namespace DownMailTest
                 string subject = msg.Headers.Subject;
                 string adress = msg.Headers.From.Address;
                 string messId = msg.Headers.MessageId;
-                string dirArchive = dir + Func.DirMonth() + "\\" + "\\";
+                string dirArchive = dir +"\\"+ Func.DirMonth() + "\\";
 
                 if ((String.IsNullOrEmpty(subject)) & (subject == ""))
                     subject = "БезТемы";
@@ -69,11 +69,9 @@ namespace DownMailTest
                 date = date.Remove(25, date.Length - 25);
                 DateTime.TryParse(date, out msgDate);
                 GetMessagersInTable();
-
-                if (((msgDate.Date.CompareTo(nowDate.Date) >= 0)
-                    && (msgDate.Date.CompareTo(endDate.Date) <= 0))
-                    && (FindMessInTable(messId) == false))
-                {
+                //прверяем диапазон письма и наличие письма в базе
+                if (((msgDate.Date.CompareTo(nowDate.Date) >= 0) & (msgDate.Date.CompareTo(endDate.Date) <= 0)) & (FindMessInTable(messId)!=true))
+                {                    
                     string d = msgDate.Date.ToString();
                     d = d.Remove(10, 8);
                     dirArchive = dirArchive + d + "\\";
@@ -110,14 +108,14 @@ namespace DownMailTest
                     Application.DoEvents();
                     DownLoadAttach(msg, subject, dirArchive);
 
-                    stop = false;
+                    //stop = false;
                 }
 
-                if (msgDate.Date.CompareTo(LoadDate.Date) == -1)
-                {
-                    stop = true;
+                //if (msgDate.Date.CompareTo(LoadDate.Date) == -1)
+                //{
+                //    stop = true;
 
-                }
+                //}
 
                 //}
 
@@ -126,7 +124,7 @@ namespace DownMailTest
                 //i = msgs.Count;
                 //stop = false;
             }
-            while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) && (msgDate.Date.CompareTo(endDate.Date) <= 0));
+            while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) & (msgDate.Date.CompareTo(endDate.Date) <= 0));
             client.Disconnect();
 
         }
@@ -221,22 +219,26 @@ namespace DownMailTest
 
         }
 
-        private bool FindMessInTable(string subject)
+        private bool FindMessInTable(string idMessage)
         {
             WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable tb = work.GetTable("select id from Messages where Subject=" + Func.AddQout(subject));
+            DataTable tb = work.GetTable("select id from Messages where IdMessage=" + Func.AddQout(idMessage));
             if (tb.Rows.Count > 0)
             {
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
+            
         }
 
-        private bool FindSubjectInTable(string idMessage)
+        private bool FindSubjectInTable(string subject)
         {
 
             WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable tb = work.GetTable("select id from Messages where IdMessage=" + Func.AddQout(idMessage));
+            DataTable tb = work.GetTable("select id from Messages where Subject=" + Func.AddQout(subject));
             if (tb.Rows.Count > 0)
             {
                 return true;
@@ -276,7 +278,7 @@ namespace DownMailTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            GetMessagersInTable();
         }
 
 
@@ -318,7 +320,9 @@ namespace DownMailTest
         private void удалитьПисьмоToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
-            work.ExecuteQuery("delete from Messages where idMessage=" + Func.AddQout(dataGridView1.CurrentCell.Value.ToString()));
+            work.ExecuteQuery("delete from Messages where idMessage=" + 
+                Func.AddQout(dataGridView1[ 3,dataGridView1.CurrentRow.Index].Value.ToString()));
+            GetMessagersInTable();
             dataGridView1.Refresh();
         }
     }

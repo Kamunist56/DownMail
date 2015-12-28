@@ -206,7 +206,7 @@ namespace DownMailTest
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             DataTable table = workSQL.GetTable("SELECT pass, port, host" +
-                " FROM \"Hosts\" where login=\"" + Func.AddQout(listBox1.SelectedItem.ToString()) + "\"");
+                " FROM \"Hosts\" where login=" + Func.AddQout(listBox1.SelectedItem.ToString()));
 
             if (table.Rows.Count > 0)
             {
