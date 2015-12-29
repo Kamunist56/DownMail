@@ -8,7 +8,8 @@ namespace DownMailTest
 
         public BaseCreator(string pathToBase)
         {
-            SetPathBase(pathToBase);            
+            SetPathBase(pathToBase);
+            CreateBase();
         }
 
         private void SetPathBase(string path)
@@ -19,25 +20,28 @@ namespace DownMailTest
         private void CreateBase()
         {
             SQLiteConnection.CreateFile(pathBase);
+        }
+
+        public void CreateTables()
+        {
             WorkSQLite work = new WorkSQLite(pathBase);
 
-            work.ExecuteQuery("CREATE TABLE" + Func.AddQout("Messages (") +
+            work.ExecuteQuery("CREATE TABLE " + Func.AddQout("Messages") +"("+
                                   Func.AddQout("id") + " INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ," +
                                   Func.AddQout("Subject") + " VARCHAR," + Func.AddQout("From_") + " VARCHAR, " +
                                   Func.AddQout("Data") + " DATETIME," + Func.AddQout("idMessage") + " VARCHAR)");
 
-            work.ExecuteQuery("CREATE TABLE " + Func.AddQout("Hosts") + "(" 
-                                + Func.AddQout("id") + " INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ," 
+            work.ExecuteQuery("CREATE TABLE " + Func.AddQout("Hosts") + "("
+                                + Func.AddQout("id") + " INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,"
                                 + Func.AddQout("login") + " VARCHAR, "
                                 + Func.AddQout("pass") + " VARCHAR, "
-                                + Func.AddQout("port") +" INTEGER, "
+                                + Func.AddQout("port") + " INTEGER, "
                                 + Func.AddQout("host") + " VARCHAR)");
 
-            work.ExecuteQuery("CREATE TABLE "+ Func.AddQout("Settings")+"("
-                                + Func.AddQout("id")+" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,"
-                                + Func.AddQout("path")+" VARCHAR, "
-                                + Func.AddQout("interval")+" VARCHAR)");
-
+            work.ExecuteQuery("CREATE TABLE " + Func.AddQout("Settings") + "("
+                                + Func.AddQout("id") + " INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,"
+                                + Func.AddQout("path") + " VARCHAR, "
+                                + Func.AddQout("interval") + " VARCHAR)");
         }
     }
 }

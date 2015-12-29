@@ -270,6 +270,7 @@ namespace DownMailTest
             if (File.Exists(base_)!=true)
             {
                 BaseCreator baseCreator = new BaseCreator(base_);
+                baseCreator.CreateTables();
             }
             workSqlite = new WorkSQLite(base_);
         }
