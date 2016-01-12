@@ -13,7 +13,7 @@ namespace DownMailTest
         Pop3Client client = new Pop3Client();
         private DateTime nowDate = DateTime.Today.AddDays(-3);
         private DateTime endDate = DateTime.Today.AddDays(-3);
-        private WorkSQLite workSqlite;//= new WorkSQLite(@"BoxLetters.sqlite");
+        private WorkSQLite workSqlite;
 
         private void connect(string host, string login, string pass, int port, string dir)
         {
@@ -32,9 +32,10 @@ namespace DownMailTest
             Application.DoEvents();
             List<string> msgs = client.GetMessageUids();
             richTextBox2.AppendText("Получил список id писем\n");
-            Application.DoEvents();
-            GetHeadMess(msgs, dir);
+            Application.DoEvents(); // моргнули
+            GetHeadMess(msgs, dir); //грузим
             richTextBox2.AppendText("Закончил\n");
+            richTextBox1.AppendText("Закончил\n");
         }
 
 
@@ -70,7 +71,8 @@ namespace DownMailTest
                 DateTime.TryParse(date, out msgDate);
                 GetMessagersInTable();
                 //прверяем диапазон письма и наличие письма в базе
-                if (((msgDate.Date.CompareTo(nowDate.Date) >= 0) & (msgDate.Date.CompareTo(endDate.Date) <= 0)) & (FindMessInTable(messId)!=true))
+                //while (CheckMessForDownload(msgDate, messId))
+                if (((msgDate.Date.CompareTo(nowDate.Date) >= 0) & (endDate.Date.CompareTo(msgDate.Date) <= 0)) & (FindMessInTable(messId)!=true))
                 {                    
                     string d = msgDate.Date.ToString();
                     d = d.Remove(10, 8);
@@ -90,12 +92,10 @@ namespace DownMailTest
                     di.Create();
 
                     // пишем в таблицу
-                    //dataGridView1.Rows.Add(subject, adress, msgDate, messId);
-
-                    // WorkSQLite workSQL = new WorkSQLite(@"BoxLetters.sqlite");
-                    workSqlite.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage) Values("
+                    workSqlite.ExecuteQuery("insert into Messages (Subject, From_, Data, idMessage, PathMessage) Values("
                                             + Func.AddQout(subject) + "," + Func.AddQout(adress) + ","
-                                            + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + ")");
+                                            + Func.AddQout(msgDate.ToString()) + "," + Func.AddQout(messId) + "," 
+                                            + Func.AddQout(dirArchive + subject) + ")");
                     GetMessagersInTable();
                     dataGridView1.Refresh();
                     //загрузка тела письма
@@ -110,9 +110,11 @@ namespace DownMailTest
 
                 }
 
- 
+
             }
-            while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) & (msgDate.Date.CompareTo(endDate.Date) <= 0));
+
+            while ((msgDate.Date.CompareTo(nowDate.Date) >= 0) &
+            ((msgDate.Date.CompareTo(endDate.Date) <= 0) || (msgDate.Date.CompareTo(endDate.Date)==1))) ;
             client.Disconnect();
 
         }
@@ -121,12 +123,7 @@ namespace DownMailTest
             SetDates();
             string startDate = nowDate.Date.ToString();
             string endData = endDate.Date.AddDays(1).ToString();
-            //startDate = startDate.Remove(10, 8);
-            //endData = endDate.Date.AddDays(1);
-            //    endData.Remove(10, 8);
-            //endData = endData.Insert(10, " 23:59:59");
 
-            //WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable table = workSqlite.GetTable("Select Subject, From_, cast(Data as varchar) Data, idMessage"
                                                     + " From Messages"
                                                     + " Where Data between "
@@ -190,8 +187,19 @@ namespace DownMailTest
         {
             //WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable table = workSqlite.GetTable("Select path, interval from Settings");
-            string path = table.Rows[0][0].ToString();
-            string interval = table.Rows[0][1].ToString();
+            string path="";
+            string interval;
+            if (table.Rows.Count>0)
+            {
+                path = table.Rows[0][0].ToString();
+                interval = table.Rows[0][1].ToString();
+            }
+            else
+            {
+                MessageBox.Show("Ни одного аккаунта не найдено");
+                return;
+            }
+            
 
             table = workSqlite.GetTable("Select login, pass, port, host"
                                                    + " From Hosts");
@@ -209,7 +217,6 @@ namespace DownMailTest
 
         private bool FindMessInTable(string idMessage)
         {
-            //WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable tb = workSqlite.GetTable("select id from Messages where IdMessage=" + Func.AddQout(idMessage));
             if (tb.Rows.Count > 0)
             {
@@ -225,7 +232,6 @@ namespace DownMailTest
         private bool FindSubjectInTable(string subject)
         {
 
-            //WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
             DataTable tb = workSqlite.GetTable("select id from Messages where Subject=" + Func.AddQout(subject));
             if (tb.Rows.Count > 0)
             {
@@ -251,6 +257,30 @@ namespace DownMailTest
                 }
             }
 
+        }
+
+        private bool CheckMessForDownload(DateTime dat, string messId)
+        {//если выранно 1 число, грузим те которые совпадают с этим числом
+         //если выбран диапазон то грузим по диапазону
+            if ((monthCalendar1.SelectionStart.Day - monthCalendar1.SelectionEnd.Day) > 1)
+            {
+                if (((dat.Date.CompareTo(nowDate.Date) >= 0) &
+                     (endDate.Date.CompareTo(dat.Date) <= 0)) &
+                     (FindMessInTable(messId) != true))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if ((dat.Date.CompareTo(nowDate.Date) == 0) & (dat.Date.CompareTo(nowDate.Date) == 1))
+                {
+                    return true;
+                }
+
+            }
+
+            return false;
         }
 
         private void SetDates()
@@ -319,7 +349,6 @@ namespace DownMailTest
 
         private void удалитьПисьмоToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // WorkSQLite work = new WorkSQLite(@"BoxLetters.sqlite");
             workSqlite.ExecuteQuery("delete from Messages where idMessage=" + 
                 Func.AddQout(dataGridView1[ 3,dataGridView1.CurrentRow.Index].Value.ToString()));
             GetMessagersInTable();

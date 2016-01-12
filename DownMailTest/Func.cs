@@ -11,7 +11,7 @@ namespace DownMailTest
         static public string DelBadChars(string value)
         {
            
-            string[] arr = new string[] { "\"", @":", "?", "<", ">", "|", @"/", @"\" };
+            string[] arr = new string[] { "\"", @":", "?", "<", ">", "|", @"/", @"\","\t" };
             for (int i = 0; i < arr.Length - 1; i++)
             {
 

@@ -44,5 +44,6 @@ namespace DownMailTest
             status = true;
             this.Close();
         }
+
     }
 }

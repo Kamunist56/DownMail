@@ -125,7 +125,10 @@ namespace DownMailTest
             String newLogin;
             if (InputBox.Input("Новый аккаунт", "Введите новый логин", out newLogin))
             {
-                listBox1.Items.Add(newLogin);
+                if (String.IsNullOrEmpty(newLogin) != true)
+                {
+                    listBox1.Items.Add(newLogin);
+                }
             }
         }
 
@@ -221,6 +224,14 @@ namespace DownMailTest
         {
             workSQL.ExecuteQuery("Delete from Hosts where login=" + Func.AddQout(listBox1.SelectedItem.ToString()));
             LoadData();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (FolderDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBox3.Text = FolderDialog.SelectedPath;
+            }
         }
     }
 }
