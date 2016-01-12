@@ -60,7 +60,7 @@ namespace DownMailTest
                 string messId = msg.Headers.MessageId;
                 string dirArchive = dir +"\\"+ Func.DirMonth() + "\\";
 
-                if ((String.IsNullOrEmpty(subject)) & (subject == ""))
+                if ((String.IsNullOrEmpty(subject)))  // & (subject == ""
                     subject = "БезТемы";
                 else { subject = Func.DelBadChars(subject); }
                 
@@ -124,7 +124,7 @@ namespace DownMailTest
             string startDate = nowDate.Date.ToString();
             string endData = endDate.Date.AddDays(1).ToString();
 
-            DataTable table = workSqlite.GetTable("Select Subject, From_, cast(Data as varchar) Data, idMessage"
+            DataTable table = workSqlite.GetTable("Select Subject, From_, cast(Data as varchar) Data, idMessage "
                                                     + " From Messages"
                                                     + " Where Data between "
                                                     + Func.AddQout(startDate)

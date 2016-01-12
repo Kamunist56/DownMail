@@ -10,25 +10,35 @@ namespace DownMailTest
     {
         static public string DelBadChars(string value)
         {
-           
-            string[] arr = new string[] { "\"", @":", "?", "<", ">", "|", @"/", @"\","\t" };
+
+            string[] arr = new string[] { "\"", @":", "?", "<", ">", "|", @"/", @"\", "\t" };
             for (int i = 0; i < arr.Length - 1; i++)
             {
-
-                do
+                string bchar = arr[i];
+                for (int t = 0; t < value.Length - 1; t++)
                 {
-                    int indChar = value.IndexOf(arr[i]);
-                    string bchar = arr[i];
-                    if (indChar > 0)
+                    int indChar = value.IndexOf(bchar);
+                    if (indChar != -1)
                     {
                         value = value.Remove(indChar, 1);
-                    }
-                } while (value.IndexOf(arr[i]) > 0);
+                        if (indChar == 0)
+                        {
+                            indChar = value.IndexOf(bchar);
+                            if (indChar != -1)
+                            {
+                                value = value.Remove(indChar, 1);
 
+                            }
+                        }
+                    }
+
+                    //} while (value.IndexOf(arr[i]) > 0);                    
+                }
 
             }
             return value.Trim();
         }
+
 
         static public string TrimSubject(string dir, string subject)
         {//ищем последний пробел и удаляем все после него пока не станет хорошо))
