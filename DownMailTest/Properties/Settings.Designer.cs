@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DownMailTest.Properties {
+namespace DownLoadMails.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

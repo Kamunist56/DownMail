@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.IO;
 namespace DownMailTest
 {
     class Func
@@ -17,20 +13,14 @@ namespace DownMailTest
                 string bchar = arr[i];
                 for (int t = 0; t < value.Length - 1; t++)
                 {
-                    int indChar = value.IndexOf(bchar);
-                    if (indChar != -1)
-                    {
-                        value = value.Remove(indChar, 1);
-                        if (indChar == 0)
-                        {
-                            indChar = value.IndexOf(bchar);
-                            if (indChar != -1)
-                            {
-                                value = value.Remove(indChar, 1);
+                    value = value.Replace(bchar, "_");
+                    //int indChar = value.IndexOf(bchar);
+                    //if (indChar != -1)
+                    //{
+                    //    value = value.Replace(bchar,"_");
 
-                            }
-                        }
-                    }
+                        
+                    //}
 
                     //} while (value.IndexOf(arr[i]) > 0);                    
                 }
@@ -80,12 +70,12 @@ namespace DownMailTest
             return Filename.Trim();
         }
 
-        static public string DirMonth()
+        static public string DirMonth( DateTime Dat)
         {
-            DateTime Now = DateTime.Now;
+            //DateTime Now = DateTime.Now;
             string[] month = new string[] {"Январь","Февраль", "Март", "Апрель", "Май", "Июнь",
                 "Июль", "Август", "Сентябрь","Ноябрь", "Октябрь", "Декабрь"};
-            return month[Now.Month - 1];
+            return month[Dat.Month - 1];
         }
 
         static public string AddQout(string value)
@@ -97,6 +87,22 @@ namespace DownMailTest
                 return value;
             }
             return "null";
+        }
+
+        static public void WriteLog(string path, string errMessage)
+        {// запись ерроры в файлик 
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(path, true, System.Text.Encoding.Default))
+                {
+                    sw.WriteLine(errMessage);
+                }
+            }
+
+            catch
+            {
+                // ошика при записи ошибки! пока хз, оставлю так чтобы не вылетало
+            }
         }
 
     }

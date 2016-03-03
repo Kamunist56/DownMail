@@ -28,23 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.загрузкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.тестToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьПисьмоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.panel2 = new System.Windows.Forms.Panel();
             this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.просмотрЛоговToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // splitter1
+            // 
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(0, 364);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(881, 5);
+            this.splitter1.TabIndex = 6;
+            this.splitter1.TabStop = false;
             // 
             // panel1
             // 
@@ -53,8 +70,22 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1034, 181);
+            this.panel1.Size = new System.Drawing.Size(881, 364);
             this.panel1.TabIndex = 5;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.загрузкаToolStripMenuItem,
+            this.настройкиToolStripMenuItem,
+            this.тестToolStripMenuItem,
+            this.удалитьПисьмоToolStripMenuItem,
+            this.просмотрЛоговToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(881, 24);
+            this.menuStrip1.TabIndex = 5;
+            this.menuStrip1.Text = "menuStrip1";
             // 
             // dataGridView1
             // 
@@ -64,21 +95,8 @@
             this.dataGridView1.Location = new System.Drawing.Point(0, 24);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1034, 157);
+            this.dataGridView1.Size = new System.Drawing.Size(881, 340);
             this.dataGridView1.TabIndex = 4;
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.загрузкаToolStripMenuItem,
-            this.настройкиToolStripMenuItem,
-            this.тестToolStripMenuItem,
-            this.удалитьПисьмоToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1034, 24);
-            this.menuStrip1.TabIndex = 5;
-            this.menuStrip1.Text = "menuStrip1";
             // 
             // загрузкаToolStripMenuItem
             // 
@@ -108,57 +126,95 @@
             this.удалитьПисьмоToolStripMenuItem.Text = "Удалить письмо";
             this.удалитьПисьмоToolStripMenuItem.Click += new System.EventHandler(this.удалитьПисьмоToolStripMenuItem_Click);
             // 
-            // splitter1
+            // statusStrip1
             // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitter1.Location = new System.Drawing.Point(0, 181);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(1034, 5);
-            this.splitter1.TabIndex = 6;
-            this.splitter1.TabStop = false;
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 170);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(881, 22);
+            this.statusStrip1.TabIndex = 17;
+            this.statusStrip1.Text = "statusStrip1";
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.statusStrip1);
+            this.panel2.Controls.Add(this.checkBox1);
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.monthCalendar1);
-            this.panel2.Controls.Add(this.richTextBox1);
-            this.panel2.Controls.Add(this.richTextBox2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 186);
+            this.panel2.Location = new System.Drawing.Point(0, 369);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1034, 319);
+            this.panel2.Size = new System.Drawing.Size(881, 192);
             this.panel2.TabIndex = 7;
             // 
             // monthCalendar1
             // 
-            this.monthCalendar1.Location = new System.Drawing.Point(444, 6);
+            this.monthCalendar1.Location = new System.Drawing.Point(0, 0);
             this.monthCalendar1.MaxSelectionCount = 31;
             this.monthCalendar1.Name = "monthCalendar1";
             this.monthCalendar1.TabIndex = 8;
             // 
-            // richTextBox1
+            // label1
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.richTextBox1.Location = new System.Drawing.Point(281, 0);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(151, 319);
-            this.richTextBox1.TabIndex = 6;
-            this.richTextBox1.Text = "";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(176, 71);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(153, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Дата проверяемого письма:";
             // 
-            // richTextBox2
+            // label2
             // 
-            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(281, 319);
-            this.richTextBox2.TabIndex = 4;
-            this.richTextBox2.Text = "";
-            this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(176, 97);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(40, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Тема: ";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(176, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "label3";
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(179, 28);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(96, 17);
+            this.checkBox1.TabIndex = 13;
+            this.checkBox1.Text = "Автозагрузка";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
+            // 
+            // просмотрЛоговToolStripMenuItem
+            // 
+            this.просмотрЛоговToolStripMenuItem.Name = "просмотрЛоговToolStripMenuItem";
+            this.просмотрЛоговToolStripMenuItem.Size = new System.Drawing.Size(111, 20);
+            this.просмотрЛоговToolStripMenuItem.Text = "Просмотр логов";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1034, 505);
+            this.ClientSize = new System.Drawing.Size(881, 561);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.panel1);
@@ -168,28 +224,37 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Splitter splitter1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem загрузкаToolStripMenuItem;
-        private System.Windows.Forms.MonthCalendar monthCalendar1;
+        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem тестToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem удалитьПисьмоToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem просмотрЛоговToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.MonthCalendar monthCalendar1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

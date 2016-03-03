@@ -111,11 +111,10 @@
             // maskedTextBox1
             // 
             this.maskedTextBox1.Location = new System.Drawing.Point(159, 152);
-            this.maskedTextBox1.Mask = "00:00";
+            this.maskedTextBox1.Mask = "00";
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.Size = new System.Drawing.Size(100, 20);
             this.maskedTextBox1.TabIndex = 8;
-            this.maskedTextBox1.ValidatingType = typeof(System.DateTime);
             // 
             // textBox3
             // 
@@ -170,7 +169,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(156, 9);
+            this.label6.Location = new System.Drawing.Point(156, 17);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(44, 13);
             this.label6.TabIndex = 14;
@@ -178,7 +177,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(159, 25);
+            this.textBox4.Location = new System.Drawing.Point(159, 33);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(122, 20);
             this.textBox4.TabIndex = 15;

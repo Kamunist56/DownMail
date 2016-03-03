@@ -118,6 +118,13 @@ namespace DownMailTest
         private void button2_Click(object sender, EventArgs e)
         {
             SaveParam();
+            using (Form1 Main = new Form1())
+            {
+                Main.CreateBase();
+                Main.CheckSettings();                
+            }
+            Application.DoEvents();
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -177,7 +184,7 @@ namespace DownMailTest
         {
             if (listBox1.SelectedItems.Count == 0)
             {
-                MessageBox.Show("Нужно выбрать почту");
+                MessageBox.Show("Нужно выбрать аккаунт");
                 return false;
             }
             return true;

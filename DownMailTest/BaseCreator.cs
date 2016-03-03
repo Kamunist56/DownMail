@@ -30,7 +30,7 @@ namespace DownMailTest
                                 + Func.AddQout("id") + " INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ," 
                                 + Func.AddQout("Subject") + " VARCHAR," 
                                 + Func.AddQout("From_") + " VARCHAR, " 
-                                + Func.AddQout("Data") + " DATETIME," 
+                                + Func.AddQout("Data") + " LONG," 
                                 + Func.AddQout("idMessage") + " VARCHAR,"
                                 + Func.AddQout("PathMessage") + "VARCHAR)");
 
