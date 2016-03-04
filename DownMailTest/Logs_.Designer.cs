@@ -1,6 +1,6 @@
-﻿namespace DownLoadMails
+﻿namespace DownMailTest
 {
-    partial class Logs
+    partial class Logs_
     {
         /// <summary>
         /// Required designer variable.
@@ -39,15 +39,18 @@
             this.richTextBox2.Size = new System.Drawing.Size(688, 536);
             this.richTextBox2.TabIndex = 5;
             this.richTextBox2.Text = "";
+            this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
             // 
-            // Logs
+            // Logs_
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(688, 536);
             this.Controls.Add(this.richTextBox2);
-            this.Name = "Logs";
+            this.Name = "Logs_";
             this.Text = "Logs";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Logs__FormClosing);
+            this.Load += new System.EventHandler(this.Logs__Load);
             this.ResumeLayout(false);
 
         }

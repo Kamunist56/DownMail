@@ -18,8 +18,7 @@ namespace DownMailTest
         private string WorkLog = "Log.txt";
         private int CountDownLoadMessage = 0;
         private DateTime LastStart;
-        private Logs Log;
-
+        private Logs_ Logs;
 
         private void connect(string host, string login, string pass, int port, string dir)
         {
@@ -41,8 +40,11 @@ namespace DownMailTest
             SendOnWorkLog("Получил список id писем");
             Application.DoEvents(); // моргнули
             GetHeadMess(msgs, dir, login); //грузим
-            richTextBox2.AppendText("Закончил\n");
+            SendOnWorkLog("Количество загруженных писем: " + CountDownLoadMessage.ToString() );
+            int minute = DateTime.Now.Minute - LastStart.Minute;
+            SendOnWorkLog("Затрченно " + minute.ToString()+ " минут");
             SendOnWorkLog("Закончил");
+
         }
 
 
@@ -54,7 +56,7 @@ namespace DownMailTest
                 int i = msgs.Count;
                 DateTime msgDate;
                 SetDates();
-                richTextBox2.AppendText("Начали смотреть че там да как...\n");
+                SendOnWorkLog("Начали смотреть че там да как...");
                 Application.DoEvents();
                 DateTime LoadDate = nowDate;
                 string debug;
@@ -124,7 +126,7 @@ namespace DownMailTest
                         di.Create();
 
                         //загрузка тела письма
-                        richTextBox2.AppendText("Загрузка письма: " + subject + "\n");
+                        SendOnWorkLog("Загрузка письма: " + subject + "");
                         Application.DoEvents();
                         LoadMess(msg, subject, dirArchive);
 
@@ -248,7 +250,7 @@ namespace DownMailTest
                 return;
             }
 
-
+            CountDownLoadMessage = 0;
             table = workSqlite.GetTable("Select login, pass, port, host"
                                                    + " From Hosts");
             for (int i = 0; i < table.Rows.Count; i++)
@@ -259,6 +261,10 @@ namespace DownMailTest
                 string host = table.Rows[i][3].ToString();
                 connect(host, login, pass, port, path);
             }
+            label1.Text = "Дата проверяемого письма:";
+            label2.Text = "Тема: ";
+            label3.Text = "Последняя загрузка: "+ LastStart.ToString()+ " Следующий запуск: " + DateTime.Now.AddMinutes(Convert.ToInt32(interval)).ToString();
+            label4.Text = "Количество загруженных писем: "+CountDownLoadMessage.ToString(); 
 
 
         }
@@ -345,6 +351,7 @@ namespace DownMailTest
         {
             string LogFile = CreateDirLog() + "//" + WorkLog;
             Func.WriteLog(LogFile, mess);
+            Logs.AddTextOnRich(mess);
         }
 
         private string CreateDirLog()
@@ -365,8 +372,9 @@ namespace DownMailTest
         public Form1()
         {
             InitializeComponent();
+            Logs = new Logs_();
         }
-
+        
         public void CreateBase()
         {
             string base_ = @"BoxLetters.sqlite";
@@ -400,7 +408,6 @@ namespace DownMailTest
                 path = table.Rows[0][0].ToString();
                 interval = table.Rows[0][1].ToString();
                 timer1.Interval = Convert.ToInt32(interval) * 60000;
-                label3.Text = "Следующий запуск: " + DateTime.Now.AddMinutes(Convert.ToInt32(interval)).ToString();
             }
             else
             {
@@ -420,8 +427,10 @@ namespace DownMailTest
 
         private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
             fOptions options = new fOptions();
             options.Show();
+            
 
         }
 
@@ -437,8 +446,7 @@ namespace DownMailTest
 
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-            richTextBox2.SelectionStart = richTextBox2.Text.Length;
-            richTextBox2.ScrollToCaret();
+
         }
 
         private void тестToolStripMenuItem_Click(object sender, EventArgs e)
@@ -465,6 +473,13 @@ namespace DownMailTest
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             timer1.Enabled = !timer1.Enabled;
+        }
+
+        private void просмотрЛоговToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logs.Show();
+            Logs.TopMost= true;
+            
         }
     }
 }
