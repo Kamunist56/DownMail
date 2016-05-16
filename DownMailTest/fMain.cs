@@ -261,6 +261,7 @@ namespace DownMailTest
                 string host = table.Rows[i][3].ToString();
                 connect(host, login, pass, port, path);
             }
+
             label1.Text = "Дата проверяемого письма:";
             label2.Text = "Тема: ";
             label3.Text = "Последняя загрузка: "+ LastStart.ToString()+ " Следующий запуск: " + DateTime.Now.AddMinutes(Convert.ToInt32(interval)).ToString();
