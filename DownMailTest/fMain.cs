@@ -22,6 +22,7 @@ namespace DownMailTest
 
         private void connect(string host, string login, string pass, int port, string dir)
         {
+            // чет на гобовскую не идет
 
             try
             {
@@ -389,7 +390,7 @@ namespace DownMailTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           // timer1.Enabled = true;
+            timer1.Enabled = true;
             CreateBase();
           //  CheckSettings();            
             GetMessagersInTable();            
