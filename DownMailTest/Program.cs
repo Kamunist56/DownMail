@@ -12,11 +12,24 @@ namespace DownMailTest
         /// Главная точка входа для приложения.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Form1 form = new Form1();
+            for (int i = 0; i<args.Length; i++)
+            {
+                if (args[i] == "auto")
+                {
+                    form.CreateBase();
+                    form.SetNowDate();
+                    form.CheckSettings();
+                    form.MainLoadMail();
+                }
+            }
+            
+            Application.Run(form);
+
         }
     }
 }

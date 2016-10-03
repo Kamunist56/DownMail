@@ -11,19 +11,20 @@ namespace DownMailTest
     public partial class Form1 : Form
     {
         Pop3Client client = new Pop3Client();
-        private DateTime nowDate;// = DateTime.Today.AddDays(-3);
-        private DateTime endDate;// = DateTime.Today.AddDays(-3);
+        public DateTime nowDate;// = DateTime.Today.AddDays(-3);
+        public DateTime endDate;// = DateTime.Today.AddDays(-3);
         private WorkSQLite workSqlite;
-        private string ErrorLogPath = "ErrorLog.txt";
-        private string WorkLog = "Log.txt";
-        private int CountDownLoadMessage = 0;
-        private DateTime LastStart;
-        private Logs_ Logs;
+        public string ErrorLogPath = "ErrorLog.txt";
+        public string WorkLog = "Log.txt";
+        public int CountDownLoadMessage = 0;
+        public DateTime LastStart;
+        public Logs_ Logs;
+        private string login_;
 
-        private void connect(string host, string login, string pass, int port, string dir)
+        public void connect(string host, string login, string pass, int port, string dir)
         {
             // чет на гобовскую не идет
-
+            login_ = login;
             try
             {
                 client.Connect(host, port, true);
@@ -47,9 +48,12 @@ namespace DownMailTest
             SendOnWorkLog("Закончил");
 
         }
+        public void SetNowDate()
+        {
+            monthCalendar1.SetDate(DateTime.Now);
+        }
 
-
-        private void GetHeadMess(List<string> msgs, string dir, string login)
+        public void GetHeadMess(List<string> msgs, string dir, string login)
         {
             try
             {
@@ -166,7 +170,7 @@ namespace DownMailTest
 
 
         }
-        private void GetMessagersInTable()
+        public void GetMessagersInTable()
         {
             SetDates();
             // d j,otv 
@@ -182,7 +186,7 @@ namespace DownMailTest
             dataGridView1.Refresh();
         }
 
-        private void LoadMess(OpenPop.Mime.Message mess, string subject, string dirArchive)
+        public void LoadMess(OpenPop.Mime.Message mess, string subject, string dirArchive)
         {
             //  FileInfo file = new FileInfo(subject+".eml");
 
@@ -219,7 +223,7 @@ namespace DownMailTest
             }
         }
 
-        private void DownLoadAttach(OpenPop.Mime.Message mess, string subject, string dirArchive)
+        public void DownLoadAttach(OpenPop.Mime.Message mess, string subject, string dirArchive)
         {
             //string mesSubj = mess.Headers.Subject;
             foreach (MessagePart attachment in mess.FindAllAttachments())
@@ -234,44 +238,51 @@ namespace DownMailTest
             }
         }
 
-        private void MainLoadMail()
+        public void MainLoadMail()
         {
-            //WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
-            DataTable table = workSqlite.GetTable("Select path, interval from Settings");
-            string path = "";
-            string interval;
-            if (table.Rows.Count > 0)
+            try
             {
-                path = table.Rows[0][0].ToString();
-                interval = table.Rows[0][1].ToString();
+                //WorkSQLite workSqlite = new WorkSQLite(@"BoxLetters.sqlite");
+                DataTable table = workSqlite.GetTable("Select path, interval from Settings");
+                string path = "";
+                string interval;
+                if (table.Rows.Count > 0)
+                {
+                    path = table.Rows[0][0].ToString();
+                    interval = table.Rows[0][1].ToString();
+                }
+                else
+                {
+                    MessageBox.Show("Ни одного аккаунта не найдено");
+                    return;
+                }
+
+                CountDownLoadMessage = 0;
+                table = workSqlite.GetTable("Select login, pass, port, host"
+                                                       + " From Hosts");
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    string login = table.Rows[i][0].ToString();
+                    string pass = table.Rows[i][1].ToString();
+                    int port = Convert.ToInt32(table.Rows[i][2].ToString());
+                    string host = table.Rows[i][3].ToString();
+                    connect(host, login, pass, port, path);
+                }
+
+                label1.Text = "Дата проверяемого письма:";
+                label2.Text = "Тема: ";
+                label3.Text = "Последняя загрузка: " + LastStart.ToString() + " Следующий запуск: " + DateTime.Now.AddMinutes(Convert.ToInt32(interval)).ToString();
+                label4.Text = "Количество загруженных писем: " + CountDownLoadMessage.ToString();
             }
-            else
+            catch (Exception e)
             {
-                MessageBox.Show("Ни одного аккаунта не найдено");
-                return;
+                SendOnErrorLog(login_, e.Message);
+
             }
-
-            CountDownLoadMessage = 0;
-            table = workSqlite.GetTable("Select login, pass, port, host"
-                                                   + " From Hosts");
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                string login = table.Rows[i][0].ToString();
-                string pass = table.Rows[i][1].ToString();
-                int port = Convert.ToInt32(table.Rows[i][2].ToString());
-                string host = table.Rows[i][3].ToString();
-                connect(host, login, pass, port, path);
-            }
-
-            label1.Text = "Дата проверяемого письма:";
-            label2.Text = "Тема: ";
-            label3.Text = "Последняя загрузка: "+ LastStart.ToString()+ " Следующий запуск: " + DateTime.Now.AddMinutes(Convert.ToInt32(interval)).ToString();
-            label4.Text = "Количество загруженных писем: "+CountDownLoadMessage.ToString(); 
-
 
         }
 
-        private bool FindMessInTable(string idMessage)
+        public bool FindMessInTable(string idMessage)
         {
             DataTable tb = workSqlite.GetTable("select id from Messages where IdMessage=" + Func.AddQout(idMessage));
             if (tb.Rows.Count > 0)
@@ -285,7 +296,7 @@ namespace DownMailTest
 
         }
 
-        private bool FindSubjectInTable(string subject)
+        public bool FindSubjectInTable(string subject)
         {
 
             DataTable tb = workSqlite.GetTable("select id from Messages where Subject=" + Func.AddQout(subject));
@@ -296,7 +307,7 @@ namespace DownMailTest
             return false;
         }
 
-        private void SetFileCharset(string fileName)
+        public void SetFileCharset(string fileName)
         {
             string line;
             using (StreamReader sr = new StreamReader(fileName))
@@ -315,7 +326,7 @@ namespace DownMailTest
 
         }
 
-        private bool CheckMessForDownload(DateTime dat, string messId)
+        public bool CheckMessForDownload(DateTime dat, string messId)
         {//если выранно 1 число, грузим те которые совпадают с этим числом
          //если выбран диапазон то грузим по диапазону
             if ((monthCalendar1.SelectionStart.Day - monthCalendar1.SelectionEnd.Day) > 1)
@@ -339,7 +350,7 @@ namespace DownMailTest
             return false;
         }
 
-        private void SendOnErrorLog(string login, string mess)
+        public void SendOnErrorLog(string login, string mess)
         {
             // директория для логов
             string LogFile = CreateDirLog() + "//" + ErrorLogPath;
@@ -349,7 +360,7 @@ namespace DownMailTest
             Func.WriteLog(LogFile, "######################################");
         }
 
-        private void SendOnWorkLog(string mess)
+        public void SendOnWorkLog(string mess)
         {
             string LogFile = CreateDirLog() + "//" + WorkLog;
             Func.WriteLog(LogFile, mess);
@@ -365,7 +376,7 @@ namespace DownMailTest
             return dir;
         }
 
-        private void SetDates()
+        public void SetDates()
         {
             nowDate = monthCalendar1.SelectionStart;
             endDate = monthCalendar1.SelectionEnd;
@@ -391,7 +402,7 @@ namespace DownMailTest
         private void Form1_Load(object sender, EventArgs e)
         {
           //  timer1.Enabled = true;
-          //  CreateBase();
+            CreateBase();
             GetMessagersInTable();            
             label2.MaximumSize = new System.Drawing.Size(500, 0);
             label2.AutoSize = true;
@@ -413,6 +424,7 @@ namespace DownMailTest
             else
             {
                 toolStripStatusLabel1.Text = "Настройки не заданны";
+                SendOnErrorLog(login_, "Настройки не заданны");
             }
             Application.DoEvents();
             
