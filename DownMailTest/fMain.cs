@@ -261,6 +261,7 @@ namespace DownMailTest
                 string host = table.Rows[i][3].ToString();
                 connect(host, login, pass, port, path);
             }
+
             label1.Text = "Дата проверяемого письма:";
             label2.Text = "Тема: ";
             label3.Text = "Последняя загрузка: "+ LastStart.ToString()+ " Следующий запуск: " + DateTime.Now.AddMinutes(Convert.ToInt32(interval)).ToString();
@@ -480,6 +481,17 @@ namespace DownMailTest
             Logs.Show();
             Logs.TopMost= true;
             
+        }
+
+        private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            string dat = monthCalendar1.SelectionStart.Date.ToString();
+            dat = dat.Remove(10, dat.Length - 10);
+            DataTable table = workSqlite.GetTable("Select Subject, From_, cast(Data as varchar) Data, idMessage "
+                                                    + " From Messages"
+                                                    + " Where cast (Data as varchar) like  " + Func.AddQout(dat + "%"));
+            dataGridView1.DataSource = table;
+            dataGridView1.Refresh();
         }
     }
 }
