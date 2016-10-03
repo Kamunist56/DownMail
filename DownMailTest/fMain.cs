@@ -390,9 +390,8 @@ namespace DownMailTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            timer1.Enabled = true;
-            CreateBase();
-          //  CheckSettings();            
+          //  timer1.Enabled = true;
+          //  CreateBase();
             GetMessagersInTable();            
             label2.MaximumSize = new System.Drawing.Size(500, 0);
             label2.AutoSize = true;
